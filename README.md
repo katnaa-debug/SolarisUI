@@ -7,6 +7,11 @@
 
 ---
 
+## 📢 Social Networks
+- Telegram: t.me/SolarisUI
+- Owner Telegram: @x_kat4na_x
+
+
 ## ✨ Features
 
 - **Fluid Animations:** Smooth tweens for all interactions (hover, click, toggle, window events).
