@@ -127,7 +127,7 @@ LeftBlock:CreateButton({ ... })
 
 Section
 ```lua
-MainTab:CreateSection("Sectin")
+MainTab:CreateSection("Section")
 ```
 
 
