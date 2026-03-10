@@ -125,6 +125,12 @@ LeftBlock:CreateButton({ ... })
 
 ## 📖 Elements UI
 
+Section
+```lua
+MainTab:CreateSection("Sectin")
+```
+
+
 Button
 ```lua
 MainTab:CreateButton({
