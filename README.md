@@ -260,4 +260,4 @@ Default, Blood, Purple, Abyss, Ocean, Toxic, Sunrise, Vaporwave, Gold, Orange, M
 
 Available Fonts:
 
-Gotham, GothamBold, SourceSans, SourceSansBold, Oswald, Roboto, RobotoMono, Sarpanch, Code, AmaticSC
+Gotham, GothamBold, SourceSans, SourceSansBold, Oswald, Roboto, RobotoMono, Sarpanch, Code, AmaticSC, FredokaOne, Jura, Arcade, SciFi, Ubuntu, Arial, Cartoon, Highway, Bodoni, Garamond, Nunito
