@@ -57,7 +57,14 @@ local Window = Library:CreateWindow({
     Theme = "Void",                  -- See "Themes" section below for list
     ToggleKey = Enum.KeyCode.RightShift,
     Transparency = 0.25,             -- Window Background Transparency (0-1)
-    ShowWatermark = true,            -- Top HUD (FPS, Ping, Time)
+    ShowWatermark = {
+        Enabled = true,
+        Title = true,
+        User = false,
+        FPS = true,
+        Time = false,
+        Ping = true
+    },             -- Top HUD (FPS, Ping, Time)
     AutoSave = true,                 -- Enable auto-saving configs
     ConfigFolder = "MyScriptConfig", -- Folder name in Executor Workspace
     CustomIcon = "1234567890"        -- (Optional) Icon ID (if don't need just delete this)
@@ -86,7 +93,14 @@ local Window = Library:CreateWindow({
     },
     ToggleKey = Enum.KeyCode.RightShift, -- Open/Close bind
     Transparency = 0.25,                 -- Window Background Transparency (0-1)
-    ShowWatermark = true,                -- Top HUD (FPS, Ping, Time)
+    ShowWatermark = {
+        Enabled = true,
+        Title = true,
+        User = false,
+        FPS = true,
+        Time = false,
+        Ping = true
+    },             -- Top HUD (FPS, Ping, Time)
     AutoSave = true,                     -- Enable auto-saving configs
     ConfigFolder = "MyScriptConfig",     -- Folder name in Executor Workspace
     CustomIcon = "1234567890"            -- (Optional) Icon ID (if don't need just delete this)
