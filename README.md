@@ -114,9 +114,9 @@ Standard Tab
 local MainTab = Window:CreateTab("Main", true(or false), "rbxassetid")
 ```
 
-1 Arg - tab name
-2 Arg - side-by-side columns mode
-3 Arg - image id near tab name
+- 1 Arg - tab name
+- 2 Arg - side-by-side columns mode
+- 3 Arg - image id near tab name
 
 Creating Blocks (For Column Tabs Only, 2 arg = true), you can make unlimited blocks on each side
 
