@@ -111,18 +111,14 @@ local Window = Library:CreateWindow({
 Standard Tab
 
 ```lua
-local MainTab = Window:CreateTab("Main")
+local MainTab = Window:CreateTab("Main", true(or false), "rbxassetid")
 ```
 
-Settings/Column Tab
+1 Arg - tab name
+2 Arg - side-by-side columns mode
+3 Arg - image id near tab name
 
-Use true as the second argument to enable Block mode (Side-by-side columns).
-
-```lua
-local SettingsTab = Window:CreateTab("Settings", true)
-```
-
-Creating Blocks (For Column Tabs Only), you can make unlimited blocks on each side
+Creating Blocks (For Column Tabs Only, 2 arg = true), you can make unlimited blocks on each side
 
 ```lua
 local LeftBlock = SettingsTab:CreateBlock({
@@ -143,7 +139,6 @@ Section
 ```lua
 MainTab:CreateSection("Section")
 ```
-
 
 Button
 ```lua
