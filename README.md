@@ -67,7 +67,7 @@ local Window = Library:CreateWindow({
     },             -- Top HUD (FPS, Ping, Time)
     AutoSave = true,                 -- Enable auto-saving configs
     ConfigFolder = "MyScriptConfig", -- Folder name in Executor Workspace
-    CustomIcon = "1234567890"        -- (Optional) Icon ID (if don't need just delete this)
+    CustomIcon = "1234567890"        -- (Optional) Icon ID (if don't need just delete this) Only id without rbxassetid://
 })
 ```
 
@@ -103,7 +103,7 @@ local Window = Library:CreateWindow({
     },             -- Top HUD (FPS, Ping, Time)
     AutoSave = true,                     -- Enable auto-saving configs
     ConfigFolder = "MyScriptConfig",     -- Folder name in Executor Workspace
-    CustomIcon = "1234567890"            -- (Optional) Icon ID (if don't need just delete this)
+    CustomIcon = "1234567890"            -- (Optional) Icon ID (if don't need just delete this) Only id without rbxassetid://
 })
 ```
 
@@ -124,6 +124,7 @@ Creating Blocks (For Column Tabs Only, 2 arg = true), you can make unlimited blo
 local LeftBlock = SettingsTab:CreateBlock({
     Name = "Player",
     Side = "Left" -- Side: "Left" or "Right"
+    ImageID = "rbxassetid" -- Only id without rbxassetid://
 })
 
 -- Now add elements to the block:
@@ -241,7 +242,7 @@ Library:Notify({
     Title = "Alert",
     Content = "Script loaded!",
     Duration = 5, -- In seconds
-    ImageID = "4483345998" -- Optional: Asset ID (if need standart delete this)
+    ImageID = "4483345998" -- (if need standart delete this) Only id without rbxassetid://
 })
 ```
 
