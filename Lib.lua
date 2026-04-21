@@ -1,3 +1,6 @@
+
+
+
 local Library = {}
 local TS = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
@@ -6,12 +9,22 @@ local HS = game:GetService("HttpService")
 local TxtS = game:GetService("TextService")
 local CG = game:GetService("CoreGui")
 local Plrs = game:GetService("Players")
-local Mouse = Plrs.LocalPlayer:GetMouse()
+local LP = Plrs.LocalPlayer
+local Mouse = LP:GetMouse()
 local Stats = game:GetService("Stats")
 
 local CurrentFPS = 60
-RS.RenderStepped:Connect(function(dt)
-    CurrentFPS = math.floor(1 / dt)
+local Frames = 0
+local LastTick = os.clock()
+
+RS.RenderStepped:Connect(function()
+    Frames = Frames + 1
+    local Now = os.clock()
+    if Now - LastTick >= 1 then
+        CurrentFPS = Frames
+        Frames = 0
+        LastTick = Now
+    end
 end)
 
 local PingStat = Stats.Network:FindFirstChild("ServerStatsItem")
@@ -291,14 +304,7 @@ local function GetAssetId(id)
     end
     local num = str:match("%d+")
     if num then
-        local assetId = "rbxassetid://" .. num
-        local success, result = pcall(function()
-            return game:GetObjects(assetId)[1]
-        end)
-        if success and result and result:IsA("Decal") then
-            return result.Texture
-        end
-        return assetId
+        return "rbxassetid://" .. num
     end
     return ""
 end
@@ -818,13 +824,13 @@ function Library:KeySystem(Settings)
     })
     
     if RS:IsStudio() then
-        ScreenGui.Parent = Plrs.LocalPlayer:WaitForChild("PlayerGui")
+        ScreenGui.Parent = LP:WaitForChild("PlayerGui")
     else
         pcall(function()
             ScreenGui.Parent = CG
         end)
         if not ScreenGui.Parent then
-            ScreenGui.Parent = Plrs.LocalPlayer:WaitForChild("PlayerGui")
+            ScreenGui.Parent = LP:WaitForChild("PlayerGui")
         end
     end
 
@@ -1102,13 +1108,13 @@ function Library:CreateWindow(Settings)
     })
     
     if RS:IsStudio() then
-        ScreenGui.Parent = Plrs.LocalPlayer:WaitForChild("PlayerGui")
+        ScreenGui.Parent = LP:WaitForChild("PlayerGui")
     else
         pcall(function()
             ScreenGui.Parent = CG
         end)
         if not ScreenGui.Parent then
-            ScreenGui.Parent = Plrs.LocalPlayer:WaitForChild("PlayerGui")
+            ScreenGui.Parent = LP:WaitForChild("PlayerGui")
         end
     end
 
@@ -1314,7 +1320,7 @@ function Library:CreateWindow(Settings)
             Order = Order + 2
         end
         if WatermarkConfig.User then
-            CreateHudItem(Order, "rbxassetid://10884490076", function() return Plrs.LocalPlayer.DisplayName end)
+            CreateHudItem(Order, "rbxassetid://10884490076", function() return LP.DisplayName end)
             Order = Order + 2
         end
         if WatermarkConfig.FPS then
@@ -1740,7 +1746,7 @@ function Library:CreateWindow(Settings)
 
     local AvatarImg = "rbxasset://textures/ui/GuiImagePlaceholder.png"
     pcall(function()
-        AvatarImg = Plrs:GetUserThumbnailAsync(Plrs.LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
+        AvatarImg = Plrs:GetUserThumbnailAsync(LP.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
     end)
     
     local Avatar = Create("ImageLabel", {
@@ -1758,7 +1764,7 @@ function Library:CreateWindow(Settings)
         Size = UDim2.new(1, -45, 0, 16),
         Position = UDim2.new(0, 40, 0, 5),
         BackgroundTransparency = 1,
-        Text = Plrs.LocalPlayer.DisplayName,
+        Text = LP.DisplayName,
         Font = Library.GlobalFontBold,
         TextColor3 = SelectedTheme.Text,
         TextSize = 13,
@@ -1772,7 +1778,7 @@ function Library:CreateWindow(Settings)
         Size = UDim2.new(1, -45, 0, 14),
         Position = UDim2.new(0, 40, 0, 20),
         BackgroundTransparency = 1,
-        Text = "@" .. Plrs.LocalPlayer.Name,
+        Text = "@" .. LP.Name,
         Font = Library.GlobalFont,
         TextColor3 = SelectedTheme.TextDark,
         TextSize = 11,
