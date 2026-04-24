@@ -1,6 +1,7 @@
 
 
 
+
 local Library = {}
 local TS = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
@@ -17,7 +18,7 @@ local CurrentFPS = 60
 local Frames = 0
 local LastTick = os.clock()
 
-RS.RenderStepped:Connect(function()
+RS.Heartbeat:Connect(function()
     Frames = Frames + 1
     local Now = os.clock()
     if Now - LastTick >= 1 then
@@ -40,6 +41,7 @@ Library.Flags = {}
 Library.Items = {}
 Library.TextObjects = {} 
 Library.GradientObjects = {} 
+Library.CornerObjects = {}
 Library.ThemeObjects = {     
     Main = {},
     Second = {},
@@ -63,6 +65,7 @@ local AvailableFonts = {
 
 Library.GlobalFont = Enum.Font.Gotham
 Library.GlobalFontBold = Enum.Font.GothamBold
+Library.GlobalCornerValue = 10
 
 local Themes = {
     Default = {
@@ -373,6 +376,10 @@ local function GetTheme(cfg)
             mapped.Font = cfg["Font"]
         end
 
+        if cfg["CornerRadius"] ~= nil then
+            mapped.CornerRadius = cfg["CornerRadius"]
+        end
+
         if not mapped.Main then mapped.Main = Themes.Default.Main end
         if not mapped.Second then mapped.Second = Themes.Default.Second end
         if not mapped.Accent then mapped.Accent = Themes.Default.Accent end
@@ -415,6 +422,7 @@ local function GetTheme(cfg)
         if not restored.Font then restored.Font = "Gotham" end
         if not restored.TextDark then restored.TextDark = Color3.fromRGB(170, 170, 170) end
         if not restored.Error then restored.Error = Color3.fromRGB(255, 60, 60) end
+        if restored.CornerRadius == nil then restored.CornerRadius = 10 end
         return restored
     end
     return Themes[cfg] or Themes.Default
@@ -590,10 +598,23 @@ local function UpdateGradients(newGradient)
     end
 end
 
+local function UpdateCorners(val)
+    Library.GlobalCornerValue = val
+    for i = #Library.CornerObjects, 1, -1 do
+        local obj = Library.CornerObjects[i]
+        if obj.Corner and obj.Corner.Parent then
+            obj.Corner.CornerRadius = UDim.new(0, math.floor(obj.BaseRadius * (val / 10)))
+        else
+            table.remove(Library.CornerObjects, i)
+        end
+    end
+end
+
 local function AddCorner(instance, radius)
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, radius)
+    corner.CornerRadius = UDim.new(0, math.floor(radius * (Library.GlobalCornerValue / 10)))
     corner.Parent = instance
+    table.insert(Library.CornerObjects, {Corner = corner, BaseRadius = radius})
     return corner
 end
 
@@ -664,6 +685,11 @@ local function AddSoftOrbs(parent, theme)
         
         task.spawn(function()
             while Orb.Parent do
+                if parent.AbsoluteSize.X == 0 or not parent.Visible then
+                    task.wait(1)
+                    continue
+                end
+
                 local targetPos = UDim2.fromScale(math.random(10, 90) / 100, math.random(10, 90) / 100)
                 local tween = TS:Create(Orb, TweenInfo.new(math.random(15, 30), Enum.EasingStyle.Sine), {Position = targetPos})
                 tween:Play()
@@ -770,59 +796,8 @@ local function AttachHorizontalScroll(box, scrollingFrame, defaultAlignment)
         end
     end)
 
-    local autoScrollTween
-    
-    task.spawn(function()
-        while box.Parent and scrollingFrame.Parent do
-            if not box.Visible or box.AbsoluteSize.X == 0 then
-                task.wait(1)
-                continue
-            end
-            if box:IsFocused() then
-                if autoScrollTween then
-                    autoScrollTween:Cancel()
-                end
-                task.wait(0.5)
-            else
-                local windowX = scrollingFrame.AbsoluteWindowSize.X
-                local boundsX = box.TextBounds.X
-                
-                if windowX > 0 and boundsX > windowX then
-                    local maxScroll = boundsX - windowX + 8
-                    
-                    task.wait(1.5)
-                    if box:IsFocused() or box.TextBounds.X <= scrollingFrame.AbsoluteWindowSize.X then
-                        continue
-                    end
-                    
-                    local speed = maxScroll / 30
-                    autoScrollTween = TS:Create(scrollingFrame, TweenInfo.new(speed, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {CanvasPosition = Vector2.new(maxScroll, 0)})
-                    autoScrollTween:Play()
-                    autoScrollTween.Completed:Wait()
-                    
-                    task.wait(1.5)
-                    if box:IsFocused() or box.TextBounds.X <= scrollingFrame.AbsoluteWindowSize.X then
-                        continue
-                    end
-                    
-                    autoScrollTween = TS:Create(scrollingFrame, TweenInfo.new(speed, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {CanvasPosition = Vector2.new(0, 0)})
-                    autoScrollTween:Play()
-                    autoScrollTween.Completed:Wait()
-                else
-                    if scrollingFrame.CanvasPosition.X ~= 0 then
-                        scrollingFrame.CanvasPosition = Vector2.new(0, 0)
-                    end
-                    task.wait(0.5)
-                end
-            end
-        end
-    end)
-    
     box:GetPropertyChangedSignal("CursorPosition"):Connect(function()
         if box:IsFocused() and box.CursorPosition > 0 then
-            if autoScrollTween then
-                autoScrollTween:Cancel()
-            end
             
             local textToCursor = string.sub(box.Text, 1, box.CursorPosition - 1)
             local size = TxtS:GetTextSize(textToCursor, box.TextSize, box.Font, Vector2.new(10000, 100))
@@ -1102,6 +1077,8 @@ function Library:CreateWindow(Settings)
     local Title = Config.Title or "UI"
     local SelectedTheme = GetTheme(Config.Theme)
     
+    Library.GlobalCornerValue = Config.CornerRadius or SelectedTheme.CornerRadius or 10
+
     Library.ConfigFolder = Config.ConfigFolder or "SolarisUI-Configs"
     if not isfolder(Library.ConfigFolder) then makefolder(Library.ConfigFolder) end
     if not isfolder(Library.ThemeFolder) then makefolder(Library.ThemeFolder) end
@@ -3319,6 +3296,17 @@ function Library:CreateWindow(Settings)
         end
     })
 
+    AppBlock:CreateSlider({
+        Name = "Corner Radius",
+        Flag = "Settings_CornerRadius",
+        Min = 0,
+        Max = 10,
+        Default = Library.GlobalCornerValue,
+        Callback = function(val)
+            UpdateCorners(val)
+        end
+    })
+
     local KeyBlock = SettingsTab:CreateBlock({Name = "Keybinds", Side = "Left"})
     
     KeyBlock:CreateKeybind({
@@ -3492,7 +3480,8 @@ function Library:CreateWindow(Settings)
                 Transparency = MainBgColor.BackgroundTransparency,
                 ImageTransparency = MainBgImage.ImageTransparency,
                 OrbsTransparency = OrbsTrans,
-                Font = Library.GlobalFont.Name
+                Font = Library.GlobalFont.Name,
+                CornerRadius = Library.GlobalCornerValue
             }
             writefile(Library.ThemeFolder .. "/" .. ThemeNameInput .. ".json", HS:JSONEncode(ThemeConfig))
             Library:Notify({Title = "Theme Saved", Content = "Saved as " .. ThemeNameInput})
@@ -3545,6 +3534,7 @@ function Library:CreateWindow(Settings)
             if Library.Items["Settings_OrbTrans"] then Library.Items["Settings_OrbTrans"].Set(math.floor((NewTheme.OrbsTransparency or 0.5) * 100)) end
             if Library.Items["Settings_BgImage"] then Library.Items["Settings_BgImage"].Set(NewTheme.Background or "") end
             if Library.Items["Settings_Font"] and NewTheme.Font then Library.Items["Settings_Font"].Set(NewTheme.Font) end
+            if Library.Items["Settings_CornerRadius"] then Library.Items["Settings_CornerRadius"].Set(NewTheme.CornerRadius or 10) end
 
             Library:Notify({Title = "Theme Loaded", Content = "Loaded " .. val})
         end
