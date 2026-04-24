@@ -67,6 +67,7 @@ local Window = Library:CreateWindow({
     },             -- Top HUD (FPS, Ping, Time)
     AutoSave = true,                 -- Enable auto-saving configs
     ConfigFolder = "MyScriptConfig", -- Folder name in Executor Workspace
+    CornerRadius = 10 -- Corner radius
     CustomIcon = "1234567890"        -- (Optional) Icon ID (if don't need just delete this) Only id without rbxassetid://
 })
 ```
@@ -90,6 +91,7 @@ local Window = Library:CreateWindow({
         TextColor = Color3.fromRGB(255, 255, 255),
         GradientStart = Color3.fromRGB(0, 0, 255),
         GradientEnd = Color3.fromRGB(255, 0, 0)
+        CornerRadius = 10 -- Corner radius
     },
     ToggleKey = Enum.KeyCode.RightShift, -- Open/Close bind
     Transparency = 0.25,                 -- Window Background Transparency (0-1)
