@@ -28,7 +28,7 @@
 Load the library directly into your script using `loadstring`:
 
 ```lua
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/katnaa-debug/SolarisUI/refs/heads/main/Lib.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/katnaa-debug/SolarisUI/refs/heads/main/Library.lua"))()
 ```
 
 ## 📚 Documentation
