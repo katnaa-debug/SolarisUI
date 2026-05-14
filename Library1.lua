@@ -1619,7 +1619,7 @@ function Library:CreateWindow(Settings)
 
     local TabContainer = Create("ScrollingFrame", {
         Parent = Main,
-        Size = UDim2.new(0, 165, 1, -171),
+        Size = UDim2.new(0, 165, 1, -123),
         Position = UDim2.new(0, 15, 0, 60),
         BackgroundColor3 = SelectedTheme.Second,
         BackgroundTransparency = 0.5,
@@ -1634,6 +1634,7 @@ function Library:CreateWindow(Settings)
     TabContainerStroke.Transparency = 0.8
     Create("UIListLayout", {
         Parent = TabContainer,
+        SortOrder = Enum.SortOrder.LayoutOrder,
         Padding = UDim.new(0, 6)
     })
     Create("UIPadding", {
@@ -1643,43 +1644,6 @@ function Library:CreateWindow(Settings)
         PaddingLeft = UDim.new(0, 6),
         PaddingRight = UDim.new(0, 6)
     })
-    
-    local OpenSettingsBtn = Create("TextButton", {
-        Parent = Main,
-        Size = UDim2.new(0, 165, 0, 40),
-        Position = UDim2.new(0, 15, 1, -103),
-        BackgroundColor3 = SelectedTheme.Second,
-        BackgroundTransparency = 0.5,
-        Text = "GUI Settings",
-        Font = Library.GlobalFontBold,
-        TextColor3 = SelectedTheme.Text,
-        TextSize = 13,
-        ZIndex = 6,
-        ThemeTag = "Second"
-    })
-    AddCorner(OpenSettingsBtn, 8)
-    table.insert(Library.ThemeObjects.Text, OpenSettingsBtn)
-
-    CreateRipple(OpenSettingsBtn, SelectedTheme.Accent)
-    AddStroke(OpenSettingsBtn, SelectedTheme).Transparency = 0.8
-    
-    local hoverTweenSettings, leaveTweenSettings
-    OpenSettingsBtn.MouseEnter:Connect(function()
-        if leaveTweenSettings then leaveTweenSettings:Cancel() end
-        hoverTweenSettings = TS:Create(OpenSettingsBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.2})
-        hoverTweenSettings:Play()
-    end)
-    OpenSettingsBtn.MouseLeave:Connect(function()
-        if hoverTweenSettings then hoverTweenSettings:Cancel() end
-        leaveTweenSettings = TS:Create(OpenSettingsBtn, TweenInfo.new(0.2), {BackgroundTransparency = 0.5})
-        leaveTweenSettings:Play()
-    end)
-    OpenSettingsBtn.MouseButton1Down:Connect(function()
-        TS:Create(OpenSettingsBtn, TweenInfo.new(0.1), {Size = UDim2.new(0, 161, 0, 36), Position = UDim2.new(0, 17, 1, -101)}):Play()
-    end)
-    OpenSettingsBtn.MouseButton1Up:Connect(function()
-        TS:Create(OpenSettingsBtn, TweenInfo.new(0.1), {Size = UDim2.new(0, 165, 0, 40), Position = UDim2.new(0, 15, 1, -103)}):Play()
-    end)
 
     local ProfileFrame = Create("Frame", {
         Parent = Main,
@@ -1821,6 +1785,7 @@ function Library:CreateWindow(Settings)
         
         local HasIcon = (ImageID ~= nil and ImageID ~= "")
         
+        local isSettings = (TabName == "UI Settings")
         local TabBtn = Create("TextButton", {
             Name = "TabBtn",
             Parent = TabContainer,
@@ -1830,6 +1795,7 @@ function Library:CreateWindow(Settings)
             Text = "",
             AutoButtonColor = false,
             ZIndex = 6,
+            LayoutOrder = isSettings and 99999 or MyIndex,
             ThemeTag = "Main"
         })
         AddCorner(TabBtn, 6)
@@ -3277,23 +3243,7 @@ function Library:CreateWindow(Settings)
         return TabElements, Activate
     end
 
-    local SettingsTab, OpenSettingsFunc = Funcs:CreateTab("Settings", true) 
-    
-    for _, v in pairs(TabContainer:GetChildren()) do 
-        if v:IsA("TextButton") then
-            local lbl = v:FindFirstChild("TabLabel")
-            if lbl and lbl.Text == "Settings" then
-                v.Visible = false
-                break 
-            end
-        end 
-    end
-
-    OpenSettingsBtn.MouseButton1Click:Connect(function()
-        if OpenSettingsFunc then
-            OpenSettingsFunc()
-        end
-    end)
+    local SettingsTab, OpenSettingsFunc = Funcs:CreateTab("UI Settings", true, "rbxassetid://7059346373")
 
     local AppBlock = SettingsTab:CreateBlock({Name = "Appearance", Side = "Left"})
     
