@@ -1,7 +1,3 @@
-
-
-
-
 local Library = {}
 local TS = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
@@ -34,7 +30,12 @@ local DataPing = ServerStats and ServerStats:FindFirstChild("Data Ping")
 
 local KeyMap = {
     Zero = "0", One = "1", Two = "2", Three = "3", Four = "4", Five = "5", Six = "6", Seven = "7", Eight = "8", Nine = "9",
-    KeypadZero = "0", KeypadOne = "1", KeypadTwo = "2", KeypadThree = "3", KeypadFour = "4", KeypadFive = "5", KeypadSix = "6", KeypadSeven = "7", KeypadEight = "8", KeypadNine = "9"
+    KeypadZero = "0", KeypadOne = "1", KeypadTwo = "2", KeypadThree = "3", KeypadFour = "4", KeypadFive = "5", KeypadSix = "6", KeypadSeven = "7", KeypadEight = "8", KeypadNine = "9",
+    LeftShift = "LShift", RightShift = "RShift", LeftControl = "LCtrl", RightControl = "RCtrl", LeftAlt = "LAlt", RightAlt = "RAlt",
+    LeftBracket = "[", RightBracket = "]", Semicolon = ";", Quote = "'", BackSlash = "\\", Comma = ",", Period = ".", Slash = "/", Minus = "-", Equals = "=",
+    Space = "Space", Tab = "Tab", Return = "Enter", Escape = "Esc", Backspace = "Bksp", Delete = "Del", Insert = "Ins",
+    Home = "Home", End = "End", PageUp = "PgUp", PageDown = "PgDn", Up = "Up", Down = "Down", Left = "Left", Right = "Right",
+    CapsLock = "Caps", NumLock = "Num"
 }
 
 Library.Flags = {}
@@ -53,6 +54,7 @@ Library.ThemeObjects = {
     TabLabels = {},
     Keybinds = {}
 }
+Library.WatermarkIslands = {}
 
 Library.ThemeFolder = "SolarisUI-Themes"
 
@@ -79,8 +81,8 @@ local Themes = {
         TextDark = Color3.fromRGB(170, 170, 170),
         Error = Color3.fromRGB(255, 60, 60),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -95,8 +97,8 @@ local Themes = {
         TextDark = Color3.fromRGB(170, 120, 120),
         Error = Color3.fromRGB(255, 0, 0),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -111,8 +113,8 @@ local Themes = {
         TextDark = Color3.fromRGB(160, 140, 190),
         Error = Color3.fromRGB(255, 0, 100),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -127,8 +129,8 @@ local Themes = {
         TextDark = Color3.fromRGB(160, 140, 190),
         Error = Color3.fromRGB(255, 0, 100),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -143,8 +145,8 @@ local Themes = {
         TextDark = Color3.fromRGB(120, 170, 170),
         Error = Color3.fromRGB(255, 80, 80),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -159,8 +161,8 @@ local Themes = {
         TextDark = Color3.fromRGB(120, 170, 170),
         Error = Color3.fromRGB(255, 50, 50),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -175,8 +177,8 @@ local Themes = {
         TextDark = Color3.fromRGB(170, 140, 120),
         Error = Color3.fromRGB(255, 0, 0),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -191,8 +193,8 @@ local Themes = {
         TextDark = Color3.fromRGB(170, 120, 170),
         Error = Color3.fromRGB(255, 50, 100),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -207,8 +209,8 @@ local Themes = {
         TextDark = Color3.fromRGB(170, 160, 120),
         Error = Color3.fromRGB(255, 50, 50),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -223,8 +225,8 @@ local Themes = {
         TextDark = Color3.fromRGB(170, 160, 120),
         Error = Color3.fromRGB(255, 50, 50),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -239,8 +241,8 @@ local Themes = {
         TextDark = Color3.fromRGB(120, 160, 140),
         Error = Color3.fromRGB(255, 80, 80),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -255,8 +257,8 @@ local Themes = {
         TextDark = Color3.fromRGB(100, 120, 160),
         Error = Color3.fromRGB(255, 80, 80),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     },
@@ -271,8 +273,8 @@ local Themes = {
         TextDark = Color3.fromRGB(120, 120, 120),
         Error = Color3.fromRGB(255, 100, 100),
         Transparency = 0.25,
+        HudTransparency = 0.5,
         ImageTransparency = 0,
-        OrbsTransparency = 0.90,
         Font = "Gotham",
         Background = ""
     }
@@ -296,6 +298,9 @@ for _, t in pairs(Themes) do
     end
     if not t.Font then
         t.Font = "Gotham"
+    end
+    if not t.HudTransparency then
+        t.HudTransparency = 0.5
     end
 end
 
@@ -354,16 +359,18 @@ local function GetTheme(cfg)
             mapped.Transparency = cfg.Transparency
         end
         
+        if cfg["HudTransparency"] then
+            mapped.HudTransparency = tonumber(cfg["HudTransparency"]) / 100
+        elseif cfg.HudTransparency then
+            mapped.HudTransparency = cfg.HudTransparency
+        else
+            mapped.HudTransparency = 0.5
+        end
+        
         if cfg["ImageTransparency"] then
             mapped.ImageTransparency = tonumber(cfg["ImageTransparency"]) / 100
         else
             mapped.ImageTransparency = cfg.ImageTransparency
-        end
-        
-        if cfg["OrbsTransparency"] then
-            mapped.OrbsTransparency = tonumber(cfg["OrbsTransparency"]) / 100
-        else
-            mapped.OrbsTransparency = cfg.OrbsTransparency
         end
 
         if cfg["BackgroundID"] then
@@ -423,6 +430,7 @@ local function GetTheme(cfg)
         if not restored.TextDark then restored.TextDark = Color3.fromRGB(170, 170, 170) end
         if not restored.Error then restored.Error = Color3.fromRGB(255, 60, 60) end
         if restored.CornerRadius == nil then restored.CornerRadius = 10 end
+        if restored.HudTransparency == nil then restored.HudTransparency = 0.5 end
         return restored
     end
     return Themes[cfg] or Themes.Default
@@ -652,61 +660,6 @@ local function AddStroke(instance, theme)
     return stroke
 end
 
-local function AddSoftOrbs(parent, theme)
-    local Container = Create("Frame", {
-        Parent = parent,
-        Size = UDim2.fromScale(1, 1),
-        BackgroundTransparency = 1,
-        ZIndex = 2,
-        ClipsDescendants = true
-    })
-    AddCorner(Container, 12)
-    
-    local function Spawn(size, color)
-        local Orb = Create("Frame", {
-            Parent = Container,
-            Size = UDim2.fromOffset(size, size),
-            Position = UDim2.fromScale(math.random(5, 95) / 100, math.random(5, 95) / 100),
-            AnchorPoint = Vector2.new(0.5, 0.5),
-            BackgroundColor3 = color,
-            BackgroundTransparency = theme.OrbsTransparency or 0.9,
-            BorderSizePixel = 0,
-            ZIndex = 2
-        })
-        AddCorner(Orb, 1000)
-        
-        Create("UIGradient", {
-            Parent = Orb,
-            Transparency = NumberSequence.new{
-                NumberSequenceKeypoint.new(0, 0.3),
-                NumberSequenceKeypoint.new(1, 1)
-            }
-        })
-        
-        task.spawn(function()
-            while Orb.Parent do
-                if parent.AbsoluteSize.X == 0 or not parent.Visible then
-                    task.wait(1)
-                    continue
-                end
-
-                local targetPos = UDim2.fromScale(math.random(10, 90) / 100, math.random(10, 90) / 100)
-                local tween = TS:Create(Orb, TweenInfo.new(math.random(15, 30), Enum.EasingStyle.Sine), {Position = targetPos})
-                tween:Play()
-                tween.Completed:Wait()
-            end
-        end)
-    end
-    
-    for i = 1, 8 do
-        local orbSize = math.random(150, 400)
-        local orbColor = (i % 2 == 0) and theme.Accent or theme.Second
-        Spawn(orbSize, orbColor)
-    end
-    
-    return Container
-end
-
 local function CreateRipple(btn, color)
     btn.ClipsDescendants = true
     btn.MouseButton1Click:Connect(function()
@@ -847,8 +800,8 @@ function Library:KeySystem(Settings)
 
     local VP = workspace.CurrentCamera.ViewportSize
     local IsMobile = UIS.TouchEnabled and (VP.X < 850 or VP.Y < 600)
-    local KeySizeX = IsMobile and math.min(VP.X - 40, 450) or 450
-    local KeySizeY = IsMobile and math.min(VP.Y - 40, 260) or 260
+    local KeySizeX = IsMobile and math.min(VP.X - 40, 350) or 450
+    local KeySizeY = IsMobile and math.min(VP.Y - 40, 220) or 260
 
     local KeyContainer = Create("Frame", {
         Parent = ScreenGui,
@@ -868,7 +821,6 @@ function Library:KeySystem(Settings)
     })
     AddCorner(Main, 12)
     AddStroke(Main, SelectedTheme)
-    AddSoftOrbs(Main, SelectedTheme)
     
     local Shadow1 = CreateDropShadow(KeyContainer, 80, 0.3)
     local Shadow2 = CreateDropShadow(KeyContainer, 30, 0.4)
@@ -1101,7 +1053,6 @@ function Library:CreateWindow(Settings)
     Library.ToggleKey = Config.ToggleKey or Enum.KeyCode.RightControl
     local WindowTrans = SelectedTheme.Transparency or Config.Transparency or 0.25 
     local ImageTrans = SelectedTheme.ImageTransparency or 0
-    local OrbsTrans = SelectedTheme.OrbsTransparency or 0.90 
     
     local WatermarkConfig = { Enabled = true, Title = true, User = true, FPS = true, Time = true, Ping = true }
     if type(Config.ShowWatermark) == "table" then
@@ -1168,10 +1119,15 @@ function Library:CreateWindow(Settings)
             end
         end
         ConfigToSave["Settings_Identifier"] = Title
-        local json = HS:JSONEncode(ConfigToSave)
-        local path = Library.ConfigFolder .. "/" .. Name .. ".json"
-        writefile(path, json)
-        Library:Notify({Title = "Config Saved", Content = "Successfully saved " .. Name, Duration = 3})
+        
+        local success, json = pcall(function() return HS:JSONEncode(ConfigToSave) end)
+        if success then
+            local path = Library.ConfigFolder .. "/" .. Name .. ".json"
+            writefile(path, json)
+            Library:Notify({Title = "Config Saved", Content = "Successfully saved " .. Name, Duration = 3})
+        else
+            Library:Notify({Title = "Save Error", Content = "Failed to encode config data", Duration = 3})
+        end
     end
 
     function Library:LoadConfig(Name)
@@ -1204,129 +1160,111 @@ function Library:CreateWindow(Settings)
         end
     end
 
-    local AutoloadPath = Library.ConfigFolder .. "/Autoload.txt"
-    if isfile(AutoloadPath) then
-        local cfgToLoad = readfile(AutoloadPath)
-        if cfgToLoad ~= "" then
-            task.delay(1, function()
-                Library:LoadConfig(cfgToLoad)
-            end)
-        end
-    end
-
     if WatermarkConfig.Enabled then
-        local HudFrame = Create("Frame", {
-            Name = "Watermark",
+        local WatermarkContainer = Create("Frame", {
+            Name = "WatermarkContainer",
             Parent = ScreenGui,
-            Size = UDim2.fromOffset(0, 38),
-            AnchorPoint = Vector2.new(0.5, 0),
+            Size = UDim2.new(0, 0, 0, 30),
             Position = UDim2.new(0.5, 0, -0.1, 0),
-            BackgroundColor3 = Color3.new(0, 0, 0),
-            BackgroundTransparency = 0.5,
-            BorderSizePixel = 0,
+            AnchorPoint = Vector2.new(0.5, 0),
+            BackgroundTransparency = 1,
             ZIndex = 5000
         })
-        AddCorner(HudFrame, 6)
-        
-        local HudStroke = AddStroke(HudFrame, SelectedTheme)
-        HudStroke.Transparency = 1 
-        MakeDraggable(HudFrame, HudFrame) 
-        
-        TS:Create(HudFrame, TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0, 20)}):Play()
-        TS:Create(HudStroke, TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Transparency = 0.5}):Play()
-        
-        local Layout = Create("UIListLayout", {
-            Parent = HudFrame,
+
+        TS:Create(WatermarkContainer, TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0, 20)}):Play()
+
+        local ItemsContainer = Create("Frame", {
+            Parent = WatermarkContainer,
+            Size = UDim2.fromScale(1, 1),
+            BackgroundTransparency = 1,
+            ZIndex = 5000
+        })
+
+        local WatermarkLayout = Create("UIListLayout", {
+            Parent = ItemsContainer,
             FillDirection = Enum.FillDirection.Horizontal,
-            HorizontalAlignment = Enum.HorizontalAlignment.Left,
+            HorizontalAlignment = Enum.HorizontalAlignment.Center,
             VerticalAlignment = Enum.VerticalAlignment.Center,
-            Padding = UDim.new(0, 10),
+            Padding = UDim.new(0, 8),
             SortOrder = Enum.SortOrder.LayoutOrder
         })
-        
-        Create("UIPadding", {
-            Parent = HudFrame,
-            PaddingLeft = UDim.new(0, 12),
-            PaddingRight = UDim.new(0, 12),
-            PaddingTop = UDim.new(0, 4),
-            PaddingBottom = UDim.new(0, 4)
-        })
 
-        Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            TS:Create(HudFrame, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, Layout.AbsoluteContentSize.X + 24, 0, 38)}):Play()
+        WatermarkLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            WatermarkContainer.Size = UDim2.new(0, WatermarkLayout.AbsoluteContentSize.X, 0, 30)
         end)
 
+        local WmDragBtn = Create("TextButton", {
+            Parent = WatermarkContainer,
+            Size = UDim2.fromScale(1, 1),
+            BackgroundTransparency = 1,
+            Text = "",
+            ZIndex = 5005
+        })
+        MakeDraggable(WmDragBtn, WatermarkContainer)
+
         local function CreateHudItem(order, iconId, textFunc)
-            local ItemContainer = Create("Frame", {
-                Parent = HudFrame,
-                BackgroundTransparency = 1,
-                Size = UDim2.new(0, 0, 1, 0),
-                AutomaticSize = Enum.AutomaticSize.X,
+            local Island = Create("Frame", {
+                Parent = ItemsContainer,
+                BackgroundColor3 = SelectedTheme.Main,
+                BackgroundTransparency = SelectedTheme.HudTransparency or 0.5,
+                Size = UDim2.new(0, 100, 1, 0),
                 LayoutOrder = order,
-                ZIndex = 5001
+                ZIndex = 5001,
+                ThemeTag = "Main"
             })
-            
-            Create("UIListLayout", {
-                Parent = ItemContainer,
-                FillDirection = Enum.FillDirection.Horizontal,
-                HorizontalAlignment = Enum.HorizontalAlignment.Left,
-                VerticalAlignment = Enum.VerticalAlignment.Center,
-                Padding = UDim.new(0, 6),
-                SortOrder = Enum.SortOrder.LayoutOrder
+            AddCorner(Island, 6)
+            local stroke = AddStroke(Island, SelectedTheme)
+            stroke.Transparency = 0.5
+            table.insert(Library.WatermarkIslands, Island)
+
+            local Inner = Create("Frame", {
+                Parent = Island,
+                Size = UDim2.fromScale(1, 1),
+                BackgroundTransparency = 1
             })
-            
+
             local Icon = Create("ImageLabel", {
-                Parent = ItemContainer,
-                Size = UDim2.new(0, 24, 0, 24),
+                Parent = Inner,
+                Size = UDim2.new(0, 16, 0, 16),
+                Position = UDim2.new(0, 8, 0.5, -8),
                 BackgroundTransparency = 1,
                 ImageColor3 = SelectedTheme.Accent,
-                ImageTransparency = 1,
                 ZIndex = 5002,
-                LayoutOrder = 1,
                 ThemeTag = "Accent"
             })
             SetImageAsync(Icon, "Image", iconId)
-            
+
             local Label = Create("TextLabel", {
-                Parent = ItemContainer,
-                Size = UDim2.new(0, 0, 1, 0),
-                AutomaticSize = Enum.AutomaticSize.X,
+                Parent = Inner,
+                Size = UDim2.new(1, -32, 1, 0),
+                Position = UDim2.new(0, 30, 0, 0),
                 BackgroundTransparency = 1,
                 Font = Library.GlobalFontBold,
-                TextSize = 14,
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                TextStrokeTransparency = 1,
+                TextSize = 13,
+                TextColor3 = SelectedTheme.Text,
                 TextXAlignment = Enum.TextXAlignment.Left,
-                Text = "...",
-                TextTransparency = 1,
+                Text = textFunc(),
                 ZIndex = 5002,
-                LayoutOrder = 2
+                ThemeTag = "Text"
             })
-            
-            TS:Create(Icon, TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
-            TS:Create(Label, TweenInfo.new(1, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
-            
-            if order > 1 then 
-                local Split = Create("Frame", {
-                    Parent = HudFrame,
-                    LayoutOrder = order - 1,
-                    Size = UDim2.new(0, 1, 0, 20),
-                    BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-                    BackgroundTransparency = 1,
-                    ZIndex = 5002
-                })
-                TS:Create(Split, TweenInfo.new(1), {BackgroundTransparency = 0.7}):Play() 
+
+            local function UpdateSize()
+                local bounds = TxtS:GetTextSize(Label.Text, 13, Library.GlobalFontBold, Vector2.new(9999, 30))
+                Island.Size = UDim2.new(0, bounds.X + 40, 1, 0)
             end
-            
-            task.spawn(function() 
-                while ItemContainer.Parent do 
+
+            Label:GetPropertyChangedSignal("Text"):Connect(UpdateSize)
+            Label:GetPropertyChangedSignal("Font"):Connect(UpdateSize)
+            UpdateSize()
+
+            task.spawn(function()
+                while Island.Parent do
                     local txt = textFunc()
                     if Label.Text ~= txt then
                         Label.Text = txt
                     end
-                    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-                    task.wait(1) 
-                end 
+                    task.wait(1)
+                end
             end)
         end
 
@@ -1335,19 +1273,19 @@ function Library:CreateWindow(Settings)
         
         if WatermarkConfig.Title then
             CreateHudItem(Order, titleIcon, function() return Title end)
-            Order = Order + 2
+            Order = Order + 1
         end
         if WatermarkConfig.User then
             CreateHudItem(Order, "rbxassetid://10884490076", function() return LP.DisplayName end)
-            Order = Order + 2
+            Order = Order + 1
         end
         if WatermarkConfig.FPS then
             CreateHudItem(Order, "rbxassetid://10884494953", function() return CurrentFPS .. " FPS" end)
-            Order = Order + 2
+            Order = Order + 1
         end
         if WatermarkConfig.Time then
             CreateHudItem(Order, "rbxassetid://10884491769", function() return os.date("%H:%M:%S") end)
-            Order = Order + 2
+            Order = Order + 1
         end
         if WatermarkConfig.Ping then
             CreateHudItem(Order, "rbxassetid://10884496263", function() 
@@ -1356,13 +1294,8 @@ function Library:CreateWindow(Settings)
                 end
                 return "0 ms"
             end)
-            Order = Order + 2
+            Order = Order + 1
         end
-        
-        task.spawn(function()
-            task.wait(0.1)
-            HudFrame.Size = UDim2.new(0, Layout.AbsoluteContentSize.X + 24, 0, 38)
-        end)
     end
 
     local NotifContainer = Create("Frame", {
@@ -1489,7 +1422,7 @@ function Library:CreateWindow(Settings)
         local LinearInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
         
         TS:Create(NotifHolder, InInfo, {Size = UDim2.new(1, 0, 0, TotalHeight)}):Play()
-        TS:Create(Frame, LinearInfo, {BackgroundTransparency = 0.15}):Play()
+        TS:Create(Frame, LinearInfo, {BackgroundTransparency = SelectedTheme.HudTransparency or 0.5}):Play()
         TS:Create(Stroke, LinearInfo, {Transparency = 0.4}):Play()
         TS:Create(Shadow, LinearInfo, {ImageTransparency = 0.35}):Play()
         TS:Create(Icon, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 38, 0, 38), Position = UDim2.new(0, 12, 0, 12), ImageTransparency = 0, Rotation = 0}):Play()
@@ -1520,8 +1453,8 @@ function Library:CreateWindow(Settings)
 
     local VP = workspace.CurrentCamera.ViewportSize
     local IsMobile = UIS.TouchEnabled and (VP.X < 850 or VP.Y < 600)
-    local WindowSizeX = IsMobile and math.clamp(VP.X - 40, 300, 780) or 780
-    local WindowSizeY = IsMobile and math.clamp(VP.Y - 40, 200, 540) or 540
+    local WindowSizeX = IsMobile and math.clamp(VP.X - 40, 300, 480) or 780
+    local WindowSizeY = IsMobile and math.clamp(VP.Y - 40, 200, 320) or 540
     local WindowSize = UDim2.fromOffset(WindowSizeX, WindowSizeY)
 
     local WindowContainer = Create("Frame", {
@@ -1571,8 +1504,6 @@ function Library:CreateWindow(Settings)
     })
     AddCorner(MainBgColor, 12)
 
-    local OrbContainer = AddSoftOrbs(Main, SelectedTheme) 
-    
     AddCorner(Main, 12)
     AddStroke(Main, SelectedTheme)
     
@@ -3039,10 +2970,138 @@ function Library:CreateWindow(Settings)
                 AddCorner(Frame, 8)
                 AddStroke(Frame, SelectedTheme).Transparency = 0.8
 
+                local TitleOffset = 12
+                local VP_Key = workspace.CurrentCamera.ViewportSize
+                local IsMobile = UIS.TouchEnabled and (VP_Key.X < 850 or VP_Key.Y < 600)
+                local MobileCheckboxState = false
+                local MobileFlag = Flag .. "_Mobile"
+                Library.Flags[MobileFlag] = false
+                
+                local OnScreenBtn
+
+                if IsMobile then
+                    TitleOffset = 40
+                    local MBox = Create("TextButton", {
+                        Parent = Frame,
+                        Size = UDim2.new(0, 20, 0, 20),
+                        Position = UDim2.new(0, 12, 0.5, -10),
+                        BackgroundColor3 = Color3.new(0, 0, 0),
+                        BackgroundTransparency = 1,
+                        Text = "",
+                        ZIndex = 8
+                    })
+                    AddCorner(MBox, 4)
+                    local MStroke = Create("UIStroke", {Parent = MBox, Color = SelectedTheme.TextDark, Transparency = 0.8, Thickness = 1})
+
+                    local MSquare = Create("Frame", {
+                        Parent = MBox,
+                        Size = UDim2.fromScale(0, 0),
+                        Position = UDim2.fromScale(0.5, 0.5),
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+                        BackgroundColor3 = SelectedTheme.ElementAccent,
+                        BackgroundTransparency = 1,
+                        ZIndex = 9,
+                        ThemeTag = "ElementAccent"
+                    })
+                    AddCorner(MSquare, 2)
+
+                    local function UpdateMobileBtnState(val)
+                        MobileCheckboxState = val
+                        Library.Flags[MobileFlag] = val
+
+                        TS:Create(MStroke, TweenInfo.new(0.3), {
+                            Color = val and SelectedTheme.ElementAccent or SelectedTheme.TextDark,
+                            Transparency = val and 0 or 0.8
+                        }):Play()
+
+                        TS:Create(MSquare, TweenInfo.new(0.3), {
+                            Size = val and UDim2.fromScale(0.6, 0.6) or UDim2.fromScale(0, 0),
+                            BackgroundTransparency = val and 0 or 1
+                        }):Play()
+
+                        if val then
+                            if not OnScreenBtn then
+                                OnScreenBtn = Create("TextButton", {
+                                    Parent = ScreenGui,
+                                    Size = UDim2.fromOffset(50, 50),
+                                    Position = UDim2.new(0.8, 0, 0.8, 0),
+                                    BackgroundColor3 = SelectedTheme.Main,
+                                    BackgroundTransparency = SelectedTheme.HudTransparency or 0.5,
+                                    Text = KeyMap[CurrentKey.Name] or CurrentKey.Name,
+                                    Font = Library.GlobalFontBold,
+                                    TextColor3 = SelectedTheme.Text,
+                                    TextSize = 16,
+                                    ZIndex = 10000,
+                                    ThemeTag = "Main"
+                                })
+                                AddCorner(OnScreenBtn, 12)
+                                AddStroke(OnScreenBtn, SelectedTheme).Transparency = 0.5
+                                table.insert(Library.ThemeObjects.Text, OnScreenBtn)
+
+                                local osDragging = false
+                                local osInput, osPos, osFramePos
+                                local dragDist = 0
+
+                                OnScreenBtn.InputBegan:Connect(function(input)
+                                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                                        osDragging = true
+                                        osPos = input.Position
+                                        osFramePos = OnScreenBtn.Position
+                                        dragDist = 0
+                                        input.Changed:Connect(function()
+                                            if input.UserInputState == Enum.UserInputState.End then
+                                                osDragging = false
+                                            end
+                                        end)
+                                    end
+                                end)
+
+                                OnScreenBtn.InputChanged:Connect(function(input)
+                                    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                                        osInput = input
+                                    end
+                                end)
+
+                                UIS.InputChanged:Connect(function(input)
+                                    if input == osInput and osDragging then
+                                        local delta = input.Position - osPos
+                                        dragDist = dragDist + delta.Magnitude
+                                        OnScreenBtn.Position = UDim2.new(osFramePos.X.Scale, osFramePos.X.Offset + delta.X, osFramePos.Y.Scale, osFramePos.Y.Offset + delta.Y)
+                                    end
+                                end)
+
+                                OnScreenBtn.MouseButton1Click:Connect(function()
+                                    if dragDist < 10 then
+                                        if Cfg.Callback then Cfg.Callback(CurrentKey) end
+                                    end
+                                end)
+                            end
+                            OnScreenBtn.Visible = true
+                            OnScreenBtn.Text = KeyMap[CurrentKey.Name] or CurrentKey.Name
+                        else
+                            if OnScreenBtn then
+                                OnScreenBtn.Visible = false
+                            end
+                        end
+                    end
+
+                    MBox.MouseButton1Click:Connect(function()
+                        UpdateMobileBtnState(not MobileCheckboxState)
+                    end)
+
+                    Library.Items[MobileFlag] = {
+                        Set = function(val)
+                            if MobileCheckboxState ~= val then
+                                UpdateMobileBtnState(val)
+                            end
+                        end
+                    }
+                end
+
                 Create("TextLabel", {
                     Parent = Frame,
                     Size = UDim2.new(1, -110, 1, 0),
-                    Position = UDim2.new(0, 12, 0, 0),
+                    Position = UDim2.new(0, TitleOffset, 0, 0),
                     BackgroundTransparency = 1,
                     Text = Cfg.Name,
                     Font = Library.GlobalFont,
@@ -3092,6 +3151,9 @@ function Library:CreateWindow(Settings)
                     CurrentKey = key
                     BindBtn.Text = KeyMap[key.Name] or key.Name
                     BindBtn.TextColor3 = SelectedTheme.TextDark
+                    if OnScreenBtn and OnScreenBtn.Visible then
+                        OnScreenBtn.Text = KeyMap[CurrentKey.Name] or CurrentKey.Name
+                    end
                     Library.Flags[Flag] = key.Name
                     Binding = false
                 end
@@ -3269,22 +3331,22 @@ function Library:CreateWindow(Settings)
     })
     
     AppBlock:CreateSlider({
-        Name = "Orbs Transparency",
-        Flag = "Settings_OrbTrans",
+        Name = "HUD Transparency",
+        Flag = "Settings_HudTrans",
         Min = 0,
         Max = 100,
-        Default = math.floor(OrbsTrans * 100),
+        Default = math.floor((SelectedTheme.HudTransparency or 0.5) * 100),
         Callback = function(val)
             local t = val / 100
-            OrbsTrans = t
-            for _, child in pairs(OrbContainer:GetChildren()) do
-                if child:IsA("Frame") then
-                    child.BackgroundTransparency = t
+            SelectedTheme.HudTransparency = t
+            for _, obj in pairs(Library.WatermarkIslands) do
+                if obj and obj.Parent then
+                    obj.BackgroundTransparency = t
                 end
             end
         end
     })
-    
+
     AppBlock:CreateInput({
         Name = "Background ID",
         Flag = "Settings_BgImage",
@@ -3300,7 +3362,7 @@ function Library:CreateWindow(Settings)
         Name = "Corner Radius",
         Flag = "Settings_CornerRadius",
         Min = 0,
-        Max = 10,
+        Max = 25,
         Default = Library.GlobalCornerValue,
         Callback = function(val)
             UpdateCorners(val)
@@ -3344,9 +3406,6 @@ function Library:CreateWindow(Settings)
         end,
         Callback = function(val)
             Library:LoadConfig(val)
-            if Library.Flags["Settings_AutoLoadToggle"] then
-                writefile(AutoloadPath, val)
-            end
         end
     })
 
@@ -3356,29 +3415,6 @@ function Library:CreateWindow(Settings)
             local sel = LoadDropCfg:Get()
             if sel and isfile(Library.ConfigFolder .. "/" .. sel .. ".json") then
                 Library:DeleteConfig(sel)
-            end
-        end
-    })
-
-    local currentAutoLoad = ""
-    if isfile(AutoloadPath) then
-        currentAutoLoad = readfile(AutoloadPath)
-    end
-
-    ConfigBlock:CreateToggle({
-        Name = "Auto Load Selected Config",
-        Flag = "Settings_AutoLoadToggle",
-        Default = true,
-        Callback = function(val)
-            if val then
-                local sel = LoadDropCfg:Get()
-                if sel then
-                    writefile(AutoloadPath, sel)
-                end
-            else
-                if isfile(AutoloadPath) then
-                    delfile(AutoloadPath)
-                end
             end
         end
     })
@@ -3478,8 +3514,8 @@ function Library:CreateWindow(Settings)
                 GradientEnd = {R = SelectedTheme.GradientEnd.R, G = SelectedTheme.GradientEnd.G, B = SelectedTheme.GradientEnd.B},
                 Background = SelectedTheme.Background,
                 Transparency = MainBgColor.BackgroundTransparency,
+                HudTransparency = SelectedTheme.HudTransparency,
                 ImageTransparency = MainBgImage.ImageTransparency,
-                OrbsTransparency = OrbsTrans,
                 Font = Library.GlobalFont.Name,
                 CornerRadius = Library.GlobalCornerValue
             }
@@ -3501,13 +3537,6 @@ function Library:CreateWindow(Settings)
             SetImageAsync(MainBgImage, "Image", NewTheme.Background or "")
             MainBgColor.BackgroundTransparency = NewTheme.Transparency or 0.25
             MainBgImage.ImageTransparency = NewTheme.ImageTransparency or 0
-            OrbsTrans = NewTheme.OrbsTransparency or 0.5
-            
-            for _, child in pairs(OrbContainer:GetChildren()) do
-                if child:IsA("Frame") then
-                    child.BackgroundTransparency = OrbsTrans
-                end
-            end
             
             SelectedTheme = NewTheme
             Themes.Default.Main = NewTheme.Main
@@ -3515,6 +3544,13 @@ function Library:CreateWindow(Settings)
             Themes.Default.Accent = NewTheme.Accent
             Themes.Default.ElementAccent = NewTheme.ElementAccent
             Themes.Default.Text = NewTheme.Text
+            SelectedTheme.HudTransparency = NewTheme.HudTransparency or 0.5
+            
+            for _, island in pairs(Library.WatermarkIslands) do
+                if island and island.Parent then
+                    island.BackgroundTransparency = SelectedTheme.HudTransparency
+                end
+            end
             
             if NewTheme.Font then
                 UpdateFonts(NewTheme.Font)
@@ -3530,8 +3566,8 @@ function Library:CreateWindow(Settings)
             if Library.Items["Settings_GradStart"] then Library.Items["Settings_GradStart"].Set(NewTheme.GradientStart or NewTheme.Accent) end
             if Library.Items["Settings_GradEnd"] then Library.Items["Settings_GradEnd"].Set(NewTheme.GradientEnd or NewTheme.Accent) end
             if Library.Items["Settings_BgTrans"] then Library.Items["Settings_BgTrans"].Set(math.floor((NewTheme.Transparency or 0.25) * 100)) end
+            if Library.Items["Settings_HudTrans"] then Library.Items["Settings_HudTrans"].Set(math.floor((SelectedTheme.HudTransparency) * 100)) end
             if Library.Items["Settings_ImageTrans"] then Library.Items["Settings_ImageTrans"].Set(math.floor((NewTheme.ImageTransparency or 0) * 100)) end
-            if Library.Items["Settings_OrbTrans"] then Library.Items["Settings_OrbTrans"].Set(math.floor((NewTheme.OrbsTransparency or 0.5) * 100)) end
             if Library.Items["Settings_BgImage"] then Library.Items["Settings_BgImage"].Set(NewTheme.Background or "") end
             if Library.Items["Settings_Font"] and NewTheme.Font then Library.Items["Settings_Font"].Set(NewTheme.Font) end
             if Library.Items["Settings_CornerRadius"] then Library.Items["Settings_CornerRadius"].Set(NewTheme.CornerRadius or 10) end
