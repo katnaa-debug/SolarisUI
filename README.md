@@ -65,9 +65,8 @@ local Window = Library:CreateWindow({
         Time = false,
         Ping = true
     },             -- Top HUD (FPS, Ping, Time)
-    AutoSave = true,                 -- Enable auto-saving configs
     ConfigFolder = "MyScriptConfig", -- Folder name in Executor Workspace
-    CornerRadius = 10 -- Corner radius
+    CornerRadius = 10 -- Corner radius (0-25)
     CustomIcon = "1234567890"        -- (Optional) Icon ID (if don't need just delete this) Only id without rbxassetid://
 })
 ```
@@ -83,7 +82,6 @@ local Window = Library:CreateWindow({
         Font = "GothamBold",          -- See "Fonts" section below for list
         ImageTransparency = 50,       -- 0-100
         BGTransparency = 0,          -- 0-100
-        OrbsTransparency = 90,        -- 0-100
         BackgroundID = "1234567890",    -- Image Texture ID
         Main = Color3.fromRGB(20, 20, 20),
         Second = Color3.fromRGB(30, 30, 30),
@@ -91,7 +89,8 @@ local Window = Library:CreateWindow({
         TextColor = Color3.fromRGB(255, 255, 255),
         GradientStart = Color3.fromRGB(0, 0, 255),
         GradientEnd = Color3.fromRGB(255, 0, 0)
-        CornerRadius = 10 -- Corner radius
+        CornerRadius = 10 -- Corner radius (0-25)
+        HudTransparency = 30 -- Watermark and Notify (0-100)
     },
     ToggleKey = Enum.KeyCode.RightShift, -- Open/Close bind
     Transparency = 0.25,                 -- Window Background Transparency (0-1)
@@ -103,7 +102,6 @@ local Window = Library:CreateWindow({
         Time = false,
         Ping = true
     },             -- Top HUD (FPS, Ping, Time)
-    AutoSave = true,                     -- Enable auto-saving configs
     ConfigFolder = "MyScriptConfig",     -- Folder name in Executor Workspace
     CustomIcon = "1234567890"            -- (Optional) Icon ID (if don't need just delete this) Only id without rbxassetid://
 })
