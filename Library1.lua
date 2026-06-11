@@ -1,3 +1,6 @@
+
+
+
 local Library = {}
 local TS = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
@@ -46,8 +49,9 @@ Library.CornerObjects = {}
 Library.KeybindFlags = {}
 Library.IsLoadingConfig = false
 
-Library.ScaledElements = {}
 Library.GlobalScale = 1.0
+Library.ScaleObj = nil
+Library.ScaleWrapper = nil
 
 Library.ThemeObjects = {     
     Main = {},
@@ -355,51 +359,13 @@ local function SetupAutoScroll(scrollingFrame, textLabel)
     task.spawn(checkAndScroll)
 end
 
-local function RegisterScale(frame, baseHeight, texts, onScale, isDynamic)
-    local item = {
-        Frame = frame,
-        BaseHeight = baseHeight,
-        Texts = texts or {},
-        OnScale = onScale,
-        IsDynamicHeight = isDynamic
-    }
-    table.insert(Library.ScaledElements, item)
-    
-    if not isDynamic then
-        frame.Size = UDim2.new(1, 0, 0, math.floor(baseHeight * Library.GlobalScale))
-    end
-    for _, txt in pairs(item.Texts) do
-        txt.Instance.TextSize = math.floor(txt.BaseSize * Library.GlobalScale)
-    end
-    if onScale then
-        pcall(onScale, Library.GlobalScale)
-    end
-end
-
 local function UpdateScale(val)
     Library.GlobalScale = val
-    for _, item in pairs(Library.ScaledElements) do
-        if item.Frame and item.Frame.Parent then
-            if not item.IsDynamicHeight then
-                item.Frame.Size = UDim2.new(1, 0, 0, math.floor(item.BaseHeight * val))
-            end
-            
-            for _, txt in pairs(item.Texts) do
-                if txt.Instance and txt.Instance.Parent then
-                    txt.Instance.TextSize = math.floor(txt.BaseSize * val)
-                end
-            end
-            
-            if item.OnScale then
-                pcall(item.OnScale, val)
-            end
-        end
+    if Library.ScaleObj then
+        Library.ScaleObj.Scale = val
     end
-    
-    for _, tab in pairs(Library.ThemeObjects.TabLabels) do
-        if tab.Btn and tab.Btn.Parent then
-            tab.Btn.Size = UDim2.new(1, 0, 0, math.floor(38 * val))
-        end
+    if Library.ScaleWrapper then
+        Library.ScaleWrapper.Size = UDim2.new(1 / val, 0, 1 / val, -45 / val)
     end
 end
 
@@ -1751,10 +1717,24 @@ function Library:CreateWindow(Settings)
         ScreenGui:Destroy()
     end)
 
-    local TabContainer = Create("ScrollingFrame", {
+    Library.ScaleWrapper = Create("Frame", {
+        Name = "ScaleWrapper",
         Parent = Main,
-        Size = UDim2.new(0.22, 0, 1, -123),
-        Position = UDim2.new(0.02, 0, 0, 60),
+        Size = UDim2.new(1 / Library.GlobalScale, 0, 1 / Library.GlobalScale, -45 / Library.GlobalScale),
+        Position = UDim2.new(0, 0, 0, 45),
+        BackgroundTransparency = 1,
+        ZIndex = 5
+    })
+    
+    Library.ScaleObj = Create("UIScale", {
+        Parent = Library.ScaleWrapper,
+        Scale = Library.GlobalScale
+    })
+
+    local TabContainer = Create("ScrollingFrame", {
+        Parent = Library.ScaleWrapper,
+        Size = UDim2.new(0.22, 0, 1, -78),
+        Position = UDim2.new(0.02, 0, 0, 15),
         BackgroundColor3 = SelectedTheme.Second,
         BackgroundTransparency = 0.5,
         ScrollBarThickness = 0,
@@ -1782,7 +1762,7 @@ function Library:CreateWindow(Settings)
     })
 
     local ProfileFrame = Create("Frame", {
-        Parent = Main,
+        Parent = Library.ScaleWrapper,
         Size = UDim2.new(0.22, 0, 0, 40),
         Position = UDim2.new(0.02, 0, 1, -55),
         BackgroundColor3 = SelectedTheme.Second,
@@ -1839,9 +1819,9 @@ function Library:CreateWindow(Settings)
     })
 
     local PageContainer = Create("Frame", {
-        Parent = Main,
-        Size = UDim2.new(0.72, 0, 1, -75),
-        Position = UDim2.new(0.26, 0, 0, 60),
+        Parent = Library.ScaleWrapper,
+        Size = UDim2.new(0.72, 0, 1, -30),
+        Position = UDim2.new(0.26, 0, 0, 15),
         BackgroundTransparency = 1,
         ZIndex = 5,
         ClipsDescendants = true
@@ -1925,7 +1905,7 @@ function Library:CreateWindow(Settings)
         local TabBtn = Create("TextButton", {
             Name = "TabBtn",
             Parent = TabContainer,
-            Size = UDim2.new(1, 0, 0, math.floor(38 * Library.GlobalScale)),
+            Size = UDim2.new(1, 0, 0, 38),
             BackgroundColor3 = SelectedTheme.Main,
             BackgroundTransparency = 1,
             Text = "",
@@ -1995,10 +1975,6 @@ function Library:CreateWindow(Settings)
             AddCorner(ActiveLine, 4)
             table.insert(Library.ThemeObjects.TabLabels, {Label = TabLabel, Btn = TabBtn})
         end
-
-        RegisterScale(TabBtn, 38, {
-            {Instance = TabLabel, BaseSize = 14}
-        })
 
         local hoverTweenTab, leaveTweenTab
         TabBtn.MouseEnter:Connect(function()
@@ -2210,16 +2186,12 @@ function Library:CreateWindow(Settings)
                     Text = forceLetterWrap(Text),
                     Font = Library.GlobalFont,
                     TextColor3 = SelectedTheme.Text,
-                    TextSize = math.floor(13 * Library.GlobalScale),
+                    TextSize = 13,
                     TextWrapped = true,
                     TextXAlignment = Enum.TextXAlignment.Left,
                     ZIndex = 8,
                     ThemeTag = "Text"
                 })
-                
-                RegisterScale(Frame, 0, {
-                    {Instance = Label, BaseSize = 13}
-                }, nil, true)
                 
                 return {
                     Set = function(newText)
@@ -2236,7 +2208,7 @@ function Library:CreateWindow(Settings)
                 
                 local Frame = Create("Frame", {
                     Parent = TargetParent,
-                    Size = UDim2.new(1, 0, 0, math.floor(Height * Library.GlobalScale)),
+                    Size = UDim2.new(1, 0, 0, Height),
                     BackgroundTransparency = 1,
                     LayoutOrder = ElementOrder,
                     ZIndex = 7
@@ -2256,8 +2228,6 @@ function Library:CreateWindow(Settings)
                     SetImageAsync(Img, "Image", newId)
                 end
                 
-                RegisterScale(Frame, Height, {}, nil, false)
-                
                 if Flag then
                     Library.Items[Flag] = {
                         Set = Update
@@ -2273,7 +2243,7 @@ function Library:CreateWindow(Settings)
                 ElementOrder = ElementOrder + 1
                 local Lab = Create("TextLabel", {
                     Parent = TargetParent,
-                    Size = UDim2.new(1, 0, 0, math.floor(20 * Library.GlobalScale)),
+                    Size = UDim2.new(1, 0, 0, 20),
                     BackgroundTransparency = 1,
                     Text = Text,
                     Font = Library.GlobalFontBold,
@@ -2285,17 +2255,13 @@ function Library:CreateWindow(Settings)
                     ThemeTag = "Text"
                 })
                 Create("UIPadding", { Parent = Lab, PaddingLeft = UDim.new(0, 6) })
-                
-                RegisterScale(Lab, 20, {
-                    {Instance = Lab, BaseSize = 13}
-                })
             end
 
             function Elements:CreateButton(Cfg)
                 ElementOrder = ElementOrder + 1
                 local Btn = Create("TextButton", {
                     Parent = TargetParent,
-                    Size = UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale)),
+                    Size = UDim2.new(1, 0, 0, 34),
                     BackgroundColor3 = SelectedTheme.Second,
                     BackgroundTransparency = 0.5,
                     Text = "",
@@ -2325,17 +2291,13 @@ function Library:CreateWindow(Settings)
                 DefaultHover(Btn)
                 
                 Btn.MouseButton1Click:Connect(function()
-                    TS:Create(Btn, TweenInfo.new(0.1), {Size = UDim2.new(1, -4, 0, math.floor(30 * Library.GlobalScale)), Position = UDim2.new(0, 2, 0, 2)}):Play()
+                    TS:Create(Btn, TweenInfo.new(0.1), {Size = UDim2.new(1, -4, 0, 30), Position = UDim2.new(0, 2, 0, 2)}):Play()
                     task.wait(0.1)
-                    TS:Create(Btn, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale)), Position = UDim2.new(0, 0, 0, 0)}):Play()
+                    TS:Create(Btn, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, 34), Position = UDim2.new(0, 0, 0, 0)}):Play()
                     if Cfg.Callback then
                         Cfg.Callback()
                     end
                 end)
-
-                RegisterScale(Btn, 34, {
-                    {Instance = Lbl, BaseSize = 14}
-                })
             end
 
             function Elements:CreateToggle(Cfg)
@@ -2344,7 +2306,7 @@ function Library:CreateWindow(Settings)
                 local Flag = Cfg.Flag or Cfg.Name
                 local Btn = Create("TextButton", {
                     Parent = TargetParent,
-                    Size = UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale)),
+                    Size = UDim2.new(1, 0, 0, 34),
                     BackgroundColor3 = SelectedTheme.Second,
                     BackgroundTransparency = 0.5,
                     Text = "",
@@ -2440,10 +2402,6 @@ function Library:CreateWindow(Settings)
                         UpdateState(val)
                     end
                 }
-
-                RegisterScale(Btn, 34, {
-                    {Instance = Lbl, BaseSize = 14}
-                })
             end
 
             function Elements:CreateSlider(Cfg)
@@ -2456,7 +2414,7 @@ function Library:CreateWindow(Settings)
                 
                 local Frame = Create("Frame", {
                     Parent = TargetParent,
-                    Size = UDim2.new(1, 0, 0, math.floor(42 * Library.GlobalScale)),
+                    Size = UDim2.new(1, 0, 0, 42),
                     BackgroundColor3 = SelectedTheme.Second,
                     BackgroundTransparency = 0.5,
                     ZIndex = 7,
@@ -2602,14 +2560,6 @@ function Library:CreateWindow(Settings)
                 end)
 
                 Library.Items[Flag] = {Set = Update}
-
-                RegisterScale(Frame, 42, {
-                    {Instance = Lbl, BaseSize = 14},
-                    {Instance = ValLbl, BaseSize = 12}
-                }, function(scale)
-                    SlideBar.Position = UDim2.new(0, 12, 0, math.floor(28 * scale))
-                    ValBg.Position = UDim2.new(1, -60, 0, math.floor(4 * scale))
-                end)
             end
 
             function Elements:CreateInput(Cfg)
@@ -2617,7 +2567,7 @@ function Library:CreateWindow(Settings)
                 local Flag = Cfg.Flag or Cfg.Name
                 local Frame = Create("Frame", {
                     Parent = TargetParent,
-                    Size = UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale)),
+                    Size = UDim2.new(1, 0, 0, 34),
                     BackgroundColor3 = SelectedTheme.Second,
                     BackgroundTransparency = 0.5,
                     ZIndex = 7,
@@ -2712,11 +2662,6 @@ function Library:CreateWindow(Settings)
                 end)
                 
                 Library.Items[Flag] = {Set = Update}
-
-                RegisterScale(Frame, 34, {
-                    {Instance = Lbl, BaseSize = 14},
-                    {Instance = Box, BaseSize = 13}
-                })
             end
 
             function Elements:CreateDropdown(Cfg)
@@ -2728,7 +2673,7 @@ function Library:CreateWindow(Settings)
                 
                 local Drop = Create("TextButton", {
                     Parent = TargetParent,
-                    Size = UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale)),
+                    Size = UDim2.new(1, 0, 0, 34),
                     BackgroundColor3 = SelectedTheme.Second,
                     BackgroundTransparency = 0.5,
                     Text = "",
@@ -2849,14 +2794,14 @@ function Library:CreateWindow(Settings)
                             hoverTweenBtn:Play()
                         end)
                         Btn.MouseLeave:Connect(function()
-                            if hoverTweenBtn then hoverTweenBtn:Cancel() end
+                            if hoverTweenBtn then hoverTweenBind:Cancel() end
                             leaveTweenBtn = TS:Create(Btn, TweenInfo.new(0.2), {BackgroundTransparency = 0.8, TextColor3 = SelectedTheme.TextDark})
                             leaveTweenBtn:Play()
                         end)
                         Btn.MouseButton1Click:Connect(function()
                             Update(item)
                             Expanded = false
-                            TS:Create(Drop, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale))}):Play()
+                            TS:Create(Drop, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 34)}):Play()
                             TS:Create(Arrow, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Rotation = 0}):Play()
                         end)
                     end
@@ -2875,9 +2820,9 @@ function Library:CreateWindow(Settings)
                     end
                     Expanded = not Expanded
                     local H = Expanded and math.min(#Options * 32 + 44, 180) or 34
-                    TS:Create(Drop, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, math.floor(H * Library.GlobalScale))}):Play()
+                    TS:Create(Drop, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, H)}):Play()
                     TS:Create(Arrow, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Rotation = Expanded and 180 or 0}):Play()
-                    TS:Create(Container, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -math.floor(34 * Library.GlobalScale))}):Play()
+                    TS:Create(Container, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, -34)}):Play()
                 end)
                 
                 Library.Items[Flag] = {
@@ -2885,14 +2830,6 @@ function Library:CreateWindow(Settings)
                     Refresh = function(self, list) RefreshList(list) end,
                     Get = function() return Selected end
                 }
-
-                RegisterScale(Drop, 34, {
-                    {Instance = Title, BaseSize = 14}
-                }, function(scale)
-                    Title.Size = UDim2.new(1, -40, 0, math.floor(34 * scale))
-                    Arrow.Position = UDim2.new(1, -28, 0, math.floor(9 * scale))
-                    Container.Position = UDim2.new(0, 0, 0, math.floor(34 * scale))
-                end, true)
                 
                 return Library.Items[Flag]
             end
@@ -2906,7 +2843,7 @@ function Library:CreateWindow(Settings)
                 
                 local Wrapper = Create("Frame", {
                     Parent = TargetParent,
-                    Size = UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale)),
+                    Size = UDim2.new(1, 0, 0, 34),
                     BackgroundColor3 = SelectedTheme.Second,
                     BackgroundTransparency = 0.5,
                     ClipsDescendants = true,
@@ -2917,7 +2854,7 @@ function Library:CreateWindow(Settings)
                 AddCorner(Wrapper, 8)
                 AddStroke(Wrapper, SelectedTheme).Transparency = 0.8
 
-                local TriggerBtn = Create("TextButton", { Parent = Wrapper, Size = UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale)), BackgroundTransparency = 1, Text = "", ZIndex = 8 })
+                local TriggerBtn = Create("TextButton", { Parent = Wrapper, Size = UDim2.new(1, 0, 0, 34), BackgroundTransparency = 1, Text = "", ZIndex = 8 })
                 
                 local Title = Create("TextLabel", { 
                     Parent = TriggerBtn, 
@@ -2948,7 +2885,7 @@ function Library:CreateWindow(Settings)
                 local Preview = Create("Frame", { Parent = PreviewContainer, Size = UDim2.new(1, -4, 1, -4), Position = UDim2.new(0, 2, 0, 2), BackgroundColor3 = Color, ZIndex = 10 })
                 AddCorner(Preview, 4)
                 
-                local Container = Create("Frame", { Parent = Wrapper, Size = UDim2.new(1, 0, 0, 160), Position = UDim2.new(0, 0, 0, math.floor(34 * Library.GlobalScale)), BackgroundTransparency = 1, ZIndex = 8 })
+                local Container = Create("Frame", { Parent = Wrapper, Size = UDim2.new(1, 0, 0, 160), Position = UDim2.new(0, 0, 0, 34), BackgroundTransparency = 1, ZIndex = 8 })
                 
                 local BoxContainer = Create("Frame", { Parent = Container, Size = UDim2.new(0, 140, 1, 0), Position = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1, ZIndex = 9 })
                 
@@ -3055,7 +2992,7 @@ function Library:CreateWindow(Settings)
                 
                 TriggerBtn.MouseButton1Click:Connect(function()
                     IsExpanded = not IsExpanded
-                    TS:Create(Wrapper, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = IsExpanded and UDim2.new(1, 0, 0, math.floor(194 * Library.GlobalScale)) or UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale))}):Play()
+                    TS:Create(Wrapper, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = IsExpanded and UDim2.new(1, 0, 0, 194) or UDim2.new(1, 0, 0, 34)}):Play()
                 end)
 
                 local function Update(col)
@@ -3171,13 +3108,6 @@ function Library:CreateWindow(Settings)
                         end
                     end
                 }
-
-                RegisterScale(Wrapper, 34, {
-                    {Instance = Title, BaseSize = 14}
-                }, function(scale)
-                    TriggerBtn.Size = UDim2.new(1, 0, 0, math.floor(34 * scale))
-                    Container.Position = UDim2.new(0, 0, 0, math.floor(34 * scale))
-                end, true)
             end
 
             function Elements:CreateKeybind(Cfg)
@@ -3190,7 +3120,7 @@ function Library:CreateWindow(Settings)
                 
                 local Frame = Create("Frame", {
                     Parent = TargetParent,
-                    Size = UDim2.new(1, 0, 0, math.floor(34 * Library.GlobalScale)),
+                    Size = UDim2.new(1, 0, 0, 34),
                     BackgroundColor3 = SelectedTheme.Second,
                     BackgroundTransparency = 0.5,
                     ZIndex = 7,
@@ -3402,11 +3332,6 @@ function Library:CreateWindow(Settings)
                         end
                     end
                 }
-
-                RegisterScale(Frame, 34, {
-                    {Instance = Lbl, BaseSize = 14},
-                    {Instance = BindBtn, BaseSize = 12}
-                })
             end
 
             return Elements
@@ -3807,20 +3732,6 @@ function Library:CreateWindow(Settings)
         end
     })
 
-    local function UpdateInternalSizing()
-        local winSize = Main.AbsoluteSize
-        local sidebarWidth = TabContainer.AbsoluteSize.X
-        local newTextSize = math.clamp(math.floor(sidebarWidth / 12), 11, 15)
-        
-        for _, tab in pairs(Library.ThemeObjects.TabLabels) do
-            if tab.Label and tab.Label.Parent then
-                tab.Label.TextSize = newTextSize
-            end
-        end
-    end
-
-    Main:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateInternalSizing)
-    UpdateInternalSizing()
     UpdateScale(Library.GlobalScale)
 
     return Funcs
