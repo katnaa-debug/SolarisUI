@@ -1,8 +1,6 @@
 
 # 🌌 Solaris UI Library
 
-
-
 **Solaris** is a modern, fully animated, and highly customizable user interface library for Roblox script execution. It features a built-in configuration manager, theme editor, key system, and optimized tween animations.
 
 ---
@@ -19,6 +17,7 @@
 - **Config Manager:** Auto-save/load functionality for flags.
 - **Key System:** Secure your script with a built-in key verification interface.
 - **Modern Layouts:** Supports standard lists and 2-column block layouts.
+- **Proportional Resizing:** Dynamic scaling of the sidebar, sidebar tab text, and internal compartments based on the main window size.
 - **Optimized:** Low memory usage with global render loops.
 
 ---
@@ -111,11 +110,11 @@ local Window = Library:CreateWindow({
 Standard Tab
 
 ```lua
-local MainTab = Window:CreateTab("Main", true(or false), "rbxassetid")
+local MainTab = Window:CreateTab("Main", true, "rbxassetid")
 ```
 
 - 1 Arg - tab name
-- 2 Arg - side-by-side columns mode
+- 2 Arg - side-by-side columns mode (resizes dynamically on window resize)
 - 3 Arg - image id near tab name
 
 Creating Blocks (For Column Tabs Only, 2 arg = true), you can make unlimited blocks on each side
@@ -137,11 +136,31 @@ LeftBlock:CreateButton({ ... })
 ## 📖 Elements UI
 
 Section
+
 ```lua
 MainTab:CreateSection("Section")
 ```
 
+Label
+
+```lua
+local Label = MainTab:CreateLabel({
+    Text = "This text wraps letter-by-letter dynamically when the block boundaries are reached."
+})
+```
+
+Image Element
+```lua
+local Image = MainTab:CreateImage({
+    Name = "Banner",
+    Flag = "BannerImage",
+    ImageID = "rbxassetid",
+    Height = 150                     -- Fixed height (width stretches proportionally to fit the block)
+})
+```
+
 Button
+
 ```lua
 MainTab:CreateButton({
     Name = "Click",
@@ -169,10 +188,10 @@ Slider
 ```lua
 MainTab:CreateSlider({
     Name = "Slider",
-    Min = 16,
-    Max = 200,
-    Default = 16,
-    Flag = "Slider",
+    Min = 0.001,
+    Max = 10.000,
+    Default = 1.255,
+    Flag = "SpeedSlider",
     Callback = function(Value)
         print("Value:", Value)
     end
@@ -234,8 +253,6 @@ MainTab:CreateKeybind({
 ```
 
 Notifications
-
-Send a notification to the user (Bottom Right).
 
 ```lua
 Library:Notify({
