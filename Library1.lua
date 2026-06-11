@@ -3708,4 +3708,5 @@ function Library:CreateWindow(Settings)
 
     return Funcs
 end
-return Librar
+
+return Library
