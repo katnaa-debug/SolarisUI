@@ -66,6 +66,7 @@ local Window = Library:CreateWindow({
     },             -- Top HUD (FPS, Ping, Time)
     ConfigFolder = "MyScriptConfig", -- Folder name in Executor Workspace
     CornerRadius = 10 -- Corner radius (0-25)
+    UiScale = 1.0 -- (0.7-1.5)
     CustomIcon = "1234567890"        -- (Optional) Icon ID (if don't need just delete this) Only id without rbxassetid://
 })
 ```
@@ -102,6 +103,8 @@ local Window = Library:CreateWindow({
         Ping = true
     },             -- Top HUD (FPS, Ping, Time)
     ConfigFolder = "MyScriptConfig",     -- Folder name in Executor Workspace
+    CornerRadius = 10 -- Corner radius (0-25)
+    UiScale = 1.0 -- (0.7-1.5)
     CustomIcon = "1234567890"            -- (Optional) Icon ID (if don't need just delete this) Only id without rbxassetid://
 })
 ```
