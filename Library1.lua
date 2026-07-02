@@ -3292,6 +3292,22 @@ function Library:CreateWindow(Settings)
                 table.insert(Library.ThemeObjects.Keybinds, BindBtn)
                 table.insert(Library.ThemeObjects.TextDark, BindStroke)
 
+                local function Update(newKey)
+                    CurrentKey = newKey
+                    Library.Flags[Flag] = newKey.Name
+                    BindBtn.Text = KeyMap[newKey.Name] or newKey.Name
+                    Binding = false
+                    if OnScreenBtn then
+                        OnScreenBtn.Text = KeyMap[newKey.Name] or newKey.Name
+                    end
+                end
+
+                BindBtn.MouseButton1Click:Connect(function()
+                    if Binding then return end
+                    Binding = true
+                    BindBtn.Text = "..."
+                end)
+
                 local hoverTweenBind, leaveTweenBind
                 BindBtn.MouseEnter:Connect(function()
                     if leaveTweenBind then leaveTweenBind:Cancel() end
