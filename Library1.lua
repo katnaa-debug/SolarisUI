@@ -3289,17 +3289,11 @@ function Library:CreateWindow(Settings)
                 table.insert(Library.ThemeObjects.Keybinds, BindBtn)
                 table.insert(Library.ThemeObjects.TextDark, BindStroke)
 
-                local JustBound = false
-
                 local function Update(newKey)
                     CurrentKey = newKey
                     Library.Flags[Flag] = newKey.Name
                     BindBtn.Text = KeyMap[newKey.Name] or newKey.Name
                     Binding = false
-                    JustBound = true
-                    task.delay(0.2, function()
-                        JustBound = false
-                    end)
                     if OnScreenBtn then
                         OnScreenBtn.Text = KeyMap[newKey.Name] or newKey.Name
                     end
@@ -3326,6 +3320,7 @@ function Library:CreateWindow(Settings)
                     end
                 end)
                 
+                -- Подключение InputBegan: срабатывает только если мы НЕ находимся в режиме бинда
                 local Connection
                 Connection = UIS.InputBegan:Connect(function(input, gpe) 
                     if not Frame.Parent then
@@ -3334,14 +3329,26 @@ function Library:CreateWindow(Settings)
                     end 
                     if not Binding then 
                         if input.KeyCode == CurrentKey and not gpe and not UIS:GetFocusedTextBox() then 
-                            if Library.IsLoadingConfig or JustBound then return end
+                            if Library.IsLoadingConfig then return end
                             if Cfg.Callback then
                                 Cfg.Callback(input.KeyCode)
                             end 
                         end 
-                    elseif input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode ~= Enum.KeyCode.Unknown then 
-                        Update(input.KeyCode) 
                     end 
+                end)
+
+                -- Подключение InputEnded: срабатывает только для назначения новой клавиши (когда мы ее отпускаем)
+                local Connection2
+                Connection2 = UIS.InputEnded:Connect(function(input, gpe)
+                    if not Frame.Parent then
+                        Connection2:Disconnect()
+                        return
+                    end
+                    if Binding then
+                        if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode ~= Enum.KeyCode.Unknown then
+                            Update(input.KeyCode)
+                        end
+                    end
                 end)
                 
                 Library.Items[Flag] = {
