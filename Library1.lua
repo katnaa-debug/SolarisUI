@@ -1,6 +1,3 @@
-
-
-
 local Library = {}
 local TS = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
@@ -3292,11 +3289,17 @@ function Library:CreateWindow(Settings)
                 table.insert(Library.ThemeObjects.Keybinds, BindBtn)
                 table.insert(Library.ThemeObjects.TextDark, BindStroke)
 
+                local JustBound = false
+
                 local function Update(newKey)
                     CurrentKey = newKey
                     Library.Flags[Flag] = newKey.Name
                     BindBtn.Text = KeyMap[newKey.Name] or newKey.Name
                     Binding = false
+                    JustBound = true
+                    task.delay(0.2, function()
+                        JustBound = false
+                    end)
                     if OnScreenBtn then
                         OnScreenBtn.Text = KeyMap[newKey.Name] or newKey.Name
                     end
@@ -3331,7 +3334,7 @@ function Library:CreateWindow(Settings)
                     end 
                     if not Binding then 
                         if input.KeyCode == CurrentKey and not gpe and not UIS:GetFocusedTextBox() then 
-                            if Library.IsLoadingConfig then return end
+                            if Library.IsLoadingConfig or JustBound then return end
                             if Cfg.Callback then
                                 Cfg.Callback(input.KeyCode)
                             end 
