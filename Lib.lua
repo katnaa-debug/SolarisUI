@@ -3320,7 +3320,6 @@ function Library:CreateWindow(Settings)
                     end
                 end)
                 
-                -- Подключение InputBegan: срабатывает только если мы НЕ находимся в режиме бинда
                 local Connection
                 Connection = UIS.InputBegan:Connect(function(input, gpe) 
                     if not Frame.Parent then
@@ -3337,7 +3336,6 @@ function Library:CreateWindow(Settings)
                     end 
                 end)
 
-                -- Подключение InputEnded: срабатывает только для назначения новой клавиши (когда мы ее отпускаем)
                 local Connection2
                 Connection2 = UIS.InputEnded:Connect(function(input, gpe)
                     if not Frame.Parent then
